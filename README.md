@@ -28,7 +28,7 @@ Web UI → Settings → Teleporter → Import your `.zip` backup.
 
 ## Notes
 - Pi-hole starts when you log in. To start at boot without login (optional, needs sudo):
-  `sudo loginctl enable-linger $USER`
+  `loginctl enable-linger`
 - If your LAN IP changes, run `./install.sh` again.
 - Needs Podman 4.4 or newer (`podman --version`). Mint 22 has 4.9.
 

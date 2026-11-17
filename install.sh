@@ -21,4 +21,11 @@ podman pull docker.io/pihole/pihole:latest
 systemctl --user daemon-reload
 systemctl --user restart pihole.service
 
-echo "Pi-hole running. Web UI: http://localhost:8080/admin  DNS: $IP"
+echo "Waiting for Pi-hole to start..."
+sleep 15
+if dig +short +time=3 @"$IP" google.com | grep -q .; then
+  echo "OK: DNS works. Web UI: http://localhost:8080/admin  DNS: $IP"
+else
+  echo "ERROR: DNS test failed. Check: journalctl --user -u pihole -n 50"
+  exit 1
+fi
