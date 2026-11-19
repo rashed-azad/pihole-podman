@@ -4,7 +4,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-API="http://localhost:8080/api"
+# Port 8080 is scoped to the LAN IP (see pihole.container.in), so
+# localhost no longer reaches it — detect the same IP install.sh uses.
+IP="${1:-$(ip -4 route get 1.1.1.1 | awk '{for(i=1;i<=NF;i++) if($i=="src") print $(i+1)}')}"
+[ -n "$IP" ] || { echo "Could not detect LAN IP. Run: ./add-blocklists.sh 192.168.x.x"; exit 1; }
+API="http://$IP:8080/api"
 
 if [ ! -f pihole.env ]; then
   echo "Missing pihole.env. Run: cp pihole.env.example pihole.env  (then set the password)"

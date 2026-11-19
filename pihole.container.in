@@ -13,11 +13,14 @@ Network=slirp4netns:port_handler=slirp4netns
 # DNS only on the LAN IP, so it does not clash with systemd-resolved (127.0.0.53)
 PublishPort=@PIHOLE_IP@:53:53/tcp
 PublishPort=@PIHOLE_IP@:53:53/udp
-PublishPort=8080:80/tcp
+PublishPort=@PIHOLE_IP@:8080:80/tcp
 Environment=TZ=Europe/Berlin
 Environment=FTLCONF_dns_listeningMode=all
 # Upstream DNS servers (separate with ;)
 Environment="FTLCONF_dns_upstreams=1.1.1.1;1.0.0.1"
+# Cryptographically validate upstream answers (protects against a
+# man-in-the-middle between this box and 1.1.1.1 injecting fake records).
+Environment="FTLCONF_dns_dnssec=true"
 # Never hand out IPv6 (AAAA) answers to LAN clients. Disabling IPv6 on the
 # host (setup-host.sh) does NOT do this by itself: clients still query over
 # IPv4 for AAAA records, so this dnsmasq directive is what actually stops it.

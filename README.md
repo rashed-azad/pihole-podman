@@ -9,7 +9,7 @@ installing Podman and allowing port 53.
 cp pihole.env.example pihole.env  # set your password
 ./install.sh                      # no sudo (auto-detects LAN IP)
 ```
-- Web UI: http://localhost:8080/admin
+- Web UI: http://<LAN-IP>:8080/admin (not `localhost` — the Web UI is scoped to your LAN IP only, same as DNS, so it isn't reachable from other networks this laptop joins)
 - Give this laptop a fixed IP in your router, then set that IP as DNS server.
 
 ## Restore old settings
@@ -32,7 +32,7 @@ Web UI → Settings → Teleporter → Import your `.zip` backup.
 - **Hagezi Multi** — ads, trackers, malware, phishing, scams
 - **Hagezi NSFW** — adult content
 
-These apply network-wide to every device using this Pi-hole as DNS, not just this machine. Review under Web UI → Adlists, and check Query Log if a site breaks unexpectedly — disable the specific list there rather than guessing.
+These apply network-wide to every device using this Pi-hole as DNS, not just this machine. Review under Web UI (http://<LAN-IP>:8080/admin) → Adlists, and check Query Log if a site breaks unexpectedly — disable the specific list there rather than guessing.
 
 Optional add-on: Hagezi also publishes a **Gambling** list (`adblock/gambling.txt`, or the smaller `.medium`/`.mini` variants — the full one is ~650k entries and noticeably bigger than Multi+NSFW combined). Not added by default since it wasn't asked for; add it to the `LISTS` array in `add-blocklists.sh` if you want it.
 
