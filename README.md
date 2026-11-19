@@ -23,8 +23,23 @@ Web UI → Settings → Teleporter → Import your `.zip` backup.
 | Restart   | `systemctl --user restart pihole` |
 | Update    | `./install.sh` |
 | Backup    | `./backup.sh` |
+| Add blocklists | `./add-blocklists.sh` (ads/trackers/malware + adult content, see below) |
 | Remove    | `./uninstall.sh` (add `--purge` to delete data) |
 | Test      | `dig @<LAN-IP> doubleclick.net` (should return 0.0.0.0) |
+
+## Blocklists
+`./add-blocklists.sh` adds two curated lists via the Pi-hole API (idempotent, safe to re-run):
+- **Hagezi Multi** — ads, trackers, malware, phishing, scams
+- **Hagezi NSFW** — adult content
+
+These apply network-wide to every device using this Pi-hole as DNS, not just this machine. Review under Web UI → Adlists, and check Query Log if a site breaks unexpectedly — disable the specific list there rather than guessing.
+
+Optional add-on: Hagezi also publishes a **Gambling** list (`adblock/gambling.txt`, or the smaller `.medium`/`.mini` variants — the full one is ~650k entries and noticeably bigger than Multi+NSFW combined). Not added by default since it wasn't asked for; add it to the `LISTS` array in `add-blocklists.sh` if you want it.
+
+## IPv6
+- `setup-host.sh` disables IPv6 on the host machine (`net.ipv6.conf.*.disable_ipv6=1`). This is host-wide, not Pi-hole-specific — revert by deleting `/etc/sysctl.d/99-pihole.conf` and re-running `sysctl --system`.
+- `pihole.container.in` additionally sets `FTLCONF_misc_dnsmasq_lines=filter-AAAA`, so Pi-hole itself never hands LAN clients an IPv6 (AAAA) answer. This is the part that actually matters for DNS behavior — the host sysctl alone doesn't stop clients from querying for or receiving AAAA records.
+- Both are new since the last install — re-run `./setup-host.sh` and `./install.sh` to apply them.
 
 ## Notes
 - Pi-hole starts when you log in. To start at boot without login (optional, needs sudo):

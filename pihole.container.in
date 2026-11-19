@@ -18,6 +18,10 @@ Environment=TZ=Europe/Berlin
 Environment=FTLCONF_dns_listeningMode=all
 # Upstream DNS servers (separate with ;)
 Environment="FTLCONF_dns_upstreams=1.1.1.1;1.0.0.1"
+# Never hand out IPv6 (AAAA) answers to LAN clients. Disabling IPv6 on the
+# host (setup-host.sh) does NOT do this by itself: clients still query over
+# IPv4 for AAAA records, so this dnsmasq directive is what actually stops it.
+Environment="FTLCONF_misc_dnsmasq_lines=filter-AAAA"
 EnvironmentFile=%h/.config/pihole/pihole.env
 Volume=%h/.local/share/pihole/etc-pihole:/etc/pihole
 AutoUpdate=registry
